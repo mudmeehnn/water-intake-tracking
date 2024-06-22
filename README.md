@@ -1,44 +1,79 @@
-# PyStart
-This project serves as an example for a project using DevContainers
+# Water Intake Tracking App
+## Overview
+The Water Intake Tracking App helps users monitor and maintain their daily water intake. By setting personalized goals and providing reminders, the app ensures users stay hydrated throughout the day. The app features a user-friendly interface built with Appsmith, a backend hosted on Render, and integration with Google Sheets for data storage.
 
-# Setup
-Start by forking the project 
-![](./docs/images/project-fork.png?raw=true)
+## Features
+- Set personalized daily water intake goals
+- Log daily water consumption easily
+- View daily, weekly, and monthly hydration progress
+- Integration with Google Sheets for data storage
+- User-friendly interface
 
-Once the project is in your account, there are different ways you can set up this project. We will cover how you can set it up in [GitHub Codespaces](https://github.com/features/codespaces) and in VS Code on your local machine.
+## Technologies Used
+- Appsmith: For creating the user interface
+- Render: For hosting the backend
+- Google Sheets: For storing user data
 
-## GitHub Codespaces
-You can set up this project to develop in [GitHub Codespaces](https://github.com/features/codespaces), where you can code, debug, and run your app remotely in a codespace. A codespace provides a fully configured development environment hosted in the cloud, eliminating the need for local setup. This environment includes your project's dependencies, tools, and extensions, ensuring a consistent and reproducible development experience. It streamlines collaboration by providing real-time editing, integrated version control, and easy access to debugging and testing tools, all while maintaining the security and reliability of your project.
+## Requirements
+- Appsmith account
+- Render account
+- Google Sheets API credentials
 
-Steps:
+## Installation
+### Prerequisites
+1. Appsmith Setup:
 
-1. Click on the "<> Code" button
-2. Click on the "Codespaces" tab
-3. Click on the "Create codespace on main"
+- Sign up for an Appsmith account at Appsmith.
+- Create a new application for the Water Intake Tracking App.
 
-![](./docs/images/pystart.png?raw=true)
+2. Render Setup:
 
+- Sign up for a Render account at Render.
+- Create a new backend service for handling the app’s logic and connecting to Google Sheets.
 
-## Locally in VS Code
-You first need to set up your Python development environment. Specifically, this tutorial requires:
+3. Google Sheets API Setup:
 
-Python 3.11 (check the installation guide if you don't have it installed)
-Python extension for VS Code (For additional details on installing extensions, you can read Extension Marketplace).
+- Enable the Google Sheets API in the Google Cloud Console.
+- Create credentials and obtain the API key and OAuth 2.0 client ID.
 
-It is recommended to use conda or env to isolate the python environment:
-- [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) information
-- [venv](https://docs.python.org/3/library/venv.html) information
+### Backend Setup
+1. Clone the repository:
 
-VS Code should have the following extensions:
-- [ms-python.python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
-- [ms-python.vscode-pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance)
-- [esbenp.prettier-vscode](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [ms-python.black-formatter](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter)
-- [charliermarsh.ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
-- [ms-python.debugpy](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
+git clone https://github.com/your-username/water-intake-tracking.git
+cd water-intake-tracking
 
+2. Install dependencies:
 
-## VS Code and DevContainer
-If you prefer to use DevContainer, you just need to install the DevContainer extension and all necessary extensions will be taken care for you.
-Follow the instructions from the [DevContainer site](https://code.visualstudio.com/docs/devcontainers/tutorial).
+pip install -r requirements.txt
 
+3. Configure Google Sheets API:
+
+- Add your client_secret.json file to the project directory.
+- Ensure the config.py file contains your Google Sheets spreadsheet ID and necessary configurations.
+
+4. Deploy the backend to Render:
+
+- Follow the Render deployment guide to deploy your backend service.
+- Ensure your service URL is noted for connecting with the Appsmith frontend.
+
+### Frontend Setup
+1. In Appsmith, design your UI:
+
+- Create input fields for logging water intake.
+- Design progress bars or charts to display hydration progress.
+- Add buttons and forms for setting goals and viewing history.
+
+2. Connect Appsmith to the Render backend:
+
+- Use Appsmith’s API connector to integrate with your backend endpoints on Render.
+- Ensure the endpoints handle requests for logging intake, fetching data, and setting goals.
+
+3. Integrate with Google Sheets:
+
+- Use the backend endpoints to read and write data to Google Sheets.
+- Ensure proper authentication and data handling as per your Google Sheets API setup.
+
+## Usage
+- Set Daily Goal: Input your daily water intake goal.
+- Log Intake: Enter the amount of water consumed throughout the day.
+- View Progress: Monitor your hydration progress with visual charts.
