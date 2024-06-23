@@ -6,7 +6,7 @@ from typing import List
 import os
 import json
 
-credentials_json = os.getenv('GOOGLE_CREDENTIALS')
+credentials_json = os.getenv('GOOGLE_CREDENTIAL')
 GOOGLE_SHEETS_CREDENTIALS = json.loads(credentials_json)
 
 TASK_SPREADSHEET_NAME = 'TasksDatabase'
