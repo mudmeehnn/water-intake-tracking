@@ -8,4 +8,4 @@ on:
   workflow_dispatch:
 
 env:
-  GOOGLE_CREDENTIAL: ${{secrets.GOOGLE_CREDENTIAL}}
+  GOOGLE_CREDENTIAL: ${{ secrets.GOOGLE_CREDENTIAL }}
