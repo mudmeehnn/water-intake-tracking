@@ -8,11 +8,10 @@ import os
 import json
 
 credentials_json = os.getenv('GOOGLE_CREDENTIAL')
-GOOGLE_SHEETS_CREDENTIALS = json.loads(credentials_json)
 USER_SPREADSHEET_NAME = 'UserDatabase'
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_SHEETS_CREDENTIALS, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_json, scope)
 client = gspread.authorize(creds)
 user_sheet = client.open(USER_SPREADSHEET_NAME).sheet1
 
