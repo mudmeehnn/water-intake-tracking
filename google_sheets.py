@@ -4,7 +4,7 @@ from config import GOOGLE_SHEETS_CREDENTIALS, TASK_SPREADSHEET_NAME
 from tasks import Task
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_SHEETS_CREDENTIALS, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(GOOGLE_SHEETS_CREDENTIALS, scope)
 client = gspread.authorize(creds)
 
 sheet = client.open(TASK_SPREADSHEET_NAME).sheet1
