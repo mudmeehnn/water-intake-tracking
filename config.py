@@ -2,7 +2,7 @@
 import os
 import json
 
-credentials_json = os.getenv('GOOGLE_CREDENTIALS')
+credentials_json = os.getenv('GOOGLE_CREDENTIAL')
 GOOGLE_SHEETS_CREDENTIALS = json.loads(credentials_json)
 
 # GOOGLE_SHEETS_CREDENTIALS = 'credentials.json'
