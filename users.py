@@ -4,9 +4,11 @@ from fastapi import APIRouter, HTTPException
 from werkzeug.security import generate_password_hash, check_password_hash
 from pydantic import BaseModel
 
+import os
+import json
 
-# Configuration file for storing sensitive information like Google Sheets credentials path
-GOOGLE_SHEETS_CREDENTIALS = 'credentials.json'
+credentials_json = os.getenv('GOOGLE_CREDENTIALS')
+GOOGLE_SHEETS_CREDENTIALS = json.loads(credentials_json)
 USER_SPREADSHEET_NAME = 'UserDatabase'
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
