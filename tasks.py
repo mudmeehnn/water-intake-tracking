@@ -3,8 +3,12 @@ from oauth2client.service_account import ServiceAccountCredentials
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
+import os
+import json
 
-GOOGLE_SHEETS_CREDENTIALS = 'credentials.json'
+credentials_json = os.getenv('GOOGLE_CREDENTIALS')
+GOOGLE_SHEETS_CREDENTIALS = json.loads(credentials_json)
+
 TASK_SPREADSHEET_NAME = 'TasksDatabase'
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
