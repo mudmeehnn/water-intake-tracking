@@ -1,0 +1,11 @@
+# This is a basic workflow that is manually triggered
+
+name: Run Python Script
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+
+env:
+  GOOGLE_CREDENTIAL: ${{secrets.GOOGLE_CREDENTIAL}}
