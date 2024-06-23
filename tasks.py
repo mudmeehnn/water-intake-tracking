@@ -4,9 +4,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 
-# Configuration file for storing sensitive information like Google Sheets credentials path
-GOOGLE_SHEETS_CREDENTIALS = 'path/to/credentials.json'
-TASK_SPREADSHEET_NAME = 'TaskDatabase'
+GOOGLE_SHEETS_CREDENTIALS = 'credentials.json'
+TASK_SPREADSHEET_NAME = 'TasksDatabase'
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_SHEETS_CREDENTIALS, scope)

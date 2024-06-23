@@ -1,11 +1,12 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException
 from werkzeug.security import generate_password_hash, check_password_hash
+from pydantic import BaseModel
+
 
 # Configuration file for storing sensitive information like Google Sheets credentials path
-GOOGLE_SHEETS_CREDENTIALS = 'path/to/credentials.json'
+GOOGLE_SHEETS_CREDENTIALS = 'credentials.json'
 USER_SPREADSHEET_NAME = 'UserDatabase'
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -30,9 +31,9 @@ def register(user: User):
     users = get_all_users()
     for u in users:
         if u['username'] == user.username:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists")
+            raise HTTPException(status_code=400, detail="User already exists")
 
-    hashed_password = generate_password_hash(user.password, method='sha256')
+    hashed_password = generate_password_hash(user.password)
     add_user_to_sheet(user.username, hashed_password)
 
     return {"message": "User registered successfully"}
@@ -46,6 +47,6 @@ def login(user: User):
             if check_password_hash(stored_password, user.password):
                 return {"message": "Login successful"}
             else:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid credentials")
+                raise HTTPException(status_code=400, detail="Invalid credentials")
 
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid credentials")
+    raise HTTPException(status_code=400, detail="Invalid credentials")

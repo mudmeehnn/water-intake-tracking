@@ -4,3 +4,4 @@ werkzeug
 pydantic
 gspread
 oauth2client
+Flask
