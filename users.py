@@ -7,7 +7,7 @@ from pydantic import BaseModel
 import os
 import json
 
-credentials_json = os.getenv('GOOGLE_CREDENTIALS')
+credentials_json = os.getenv('GOOGLE_CREDENTIAL')
 GOOGLE_SHEETS_CREDENTIALS = json.loads(credentials_json)
 USER_SPREADSHEET_NAME = 'UserDatabase'
 
