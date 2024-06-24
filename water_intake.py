@@ -29,7 +29,7 @@ def add_log_to_sheet(sheet, log):
 
 def get_logs_by_date_range(sheet, start_date, end_date):
     logs = get_all_logs(sheet)
-    filtered_logs = [log for log in logs if start_date <= datetime.strptime(log['Date'], "%Y-%m-%d") <= end_date]
+    filtered_logs = [log for log in logs if start_date <= datetime.strptime(log['Date'], "%Y-%m-%d").date() <= end_date]
     return filtered_logs
 
 @water_intake_router.post("/log", response_model=IntakeLog)
@@ -43,50 +43,44 @@ def get_logs():
     return logs
 
 @water_intake_router.get("/logs/daily", response_model=List[IntakeLog])
-def get_daily_logs(date: datetime):
+def get_daily_logs(date: datetime.date):
     logs = get_logs_by_date_range(intake_sheet, date, date)
     return logs
 
 @water_intake_router.get("/logs/weekly", response_model=List[IntakeLog])
-def get_weekly_logs(date: datetime):
+def get_weekly_logs(date: datetime.date):
     start_date = date - timedelta(days=date.weekday())  # Monday of the current week
     end_date = start_date + timedelta(days=6)  # Sunday of the current week
     logs = get_logs_by_date_range(intake_sheet, start_date, end_date)
     return logs
 
 @water_intake_router.get("/logs/monthly", response_model=List[IntakeLog])
-def get_monthly_logs(date: datetime):
+def get_monthly_logs(date: datetime.date):
     start_date = date.replace(day=1)  # First day of the current month
-    next_month = start_date.replace(month=start_date.month % 12 + 1, day=1)
+    next_month = (start_date + timedelta(days=31)).replace(day=1)
     end_date = next_month - timedelta(days=1)  # Last day of the current month
     logs = get_logs_by_date_range(intake_sheet, start_date, end_date)
     return logs
 
 @water_intake_router.get("/progress")
-def get_progress(date: datetime):
+def get_progress(date: datetime.date):
     daily_logs = get_logs_by_date_range(intake_sheet, date, date)
     total_intake = sum(float(log['Amount']) for log in daily_logs)
-    # Retrieve the daily goal from the sheet (for simplicity, assuming it's in the first row, third column)
-    daily_goal = float(intake_sheet.cell(2, 3).value) if intake_sheet.cell(2, 3).value else 8
+    daily_goal = intake_sheet.cell(1, 3).value
 
-    progress = (total_intake / daily_goal) * 100 if daily_goal else 0
+    if not daily_goal:
+        daily_goal = 8  # Default to 8 cups if there is no daily goal set
+
+    progress = (total_intake / float(daily_goal)) * 100 if daily_goal else 0
 
     return {"date": date, "total_intake_cups": total_intake, "daily_goal_cups": daily_goal, "progress": progress}
 
 @water_intake_router.post("/goal", response_model=Goal)
 def set_daily_goal(goal: Goal):
-    # Retrieve the previous day's goal from the sheet
-    previous_goal = intake_sheet.cell(2, 3).value
-    if not previous_goal:
-        previous_goal = 8  # Default to 8 cups if there is no previous goal
-
-    # Update the daily goal in the sheet
-    intake_sheet.update_cell(2, 3, goal.daily_goal_cups or previous_goal)
-
+    intake_sheet.update_cell(1, 3, goal.daily_goal_cups)
     return goal
 
 @water_intake_router.put("/goal", response_model=Goal)
 def update_daily_goal(goal: Goal):
-    # Update the daily goal in the sheet (for simplicity, assuming it's in the second row, third column)
-    intake_sheet.update_cell(2, 3, goal.daily_goal_cups)
+    intake_sheet.update_cell(1, 3, goal.daily_goal_cups)
     return goal
