@@ -25,11 +25,11 @@ def get_all_logs(sheet):
     return sheet.get_all_records()
 
 def add_log_to_sheet(sheet, log):
-    sheet.append_row([log.date.strftime("%Y-%m-%d"), log.amount_cups])
+    sheet.append_row([log.date.strftime("%Y-%m-%d"), log.amount_cups, ""])
 
 def get_logs_by_date_range(sheet, start_date, end_date):
     logs = get_all_logs(sheet)
-    filtered_logs = [log for log in logs if start_date <= datetime.strptime(log['date'], "%Y-%m-%d") <= end_date]
+    filtered_logs = [log for log in logs if start_date <= datetime.strptime(log['Date'], "%Y-%m-%d") <= end_date]
     return filtered_logs
 
 @water_intake_router.post("/log", response_model=IntakeLog)
@@ -65,9 +65,9 @@ def get_monthly_logs(date: datetime):
 @water_intake_router.get("/progress")
 def get_progress(date: datetime):
     daily_logs = get_logs_by_date_range(intake_sheet, date, date)
-    total_intake = sum(float(log['amount_cups']) for log in daily_logs)
+    total_intake = sum(float(log['Amount']) for log in daily_logs)
     # Retrieve the daily goal from the sheet (for simplicity, assuming it's in the first row, third column)
-    daily_goal = float(intake_sheet.cell(1, 3).value)
+    daily_goal = float(intake_sheet.cell(2, 3).value) if intake_sheet.cell(2, 3).value else 8
 
     progress = (total_intake / daily_goal) * 100 if daily_goal else 0
 
@@ -76,17 +76,17 @@ def get_progress(date: datetime):
 @water_intake_router.post("/goal", response_model=Goal)
 def set_daily_goal(goal: Goal):
     # Retrieve the previous day's goal from the sheet
-    previous_goal = intake_sheet.cell(1, 3).value
+    previous_goal = intake_sheet.cell(2, 3).value
     if not previous_goal:
         previous_goal = 8  # Default to 8 cups if there is no previous goal
 
     # Update the daily goal in the sheet
-    intake_sheet.update_cell(1, 3, goal.daily_goal_cups or previous_goal)
+    intake_sheet.update_cell(2, 3, goal.daily_goal_cups or previous_goal)
 
     return goal
 
 @water_intake_router.put("/goal", response_model=Goal)
 def update_daily_goal(goal: Goal):
-    # Update the daily goal in the sheet (for simplicity, assuming it's in the first row, third column)
-    intake_sheet.update_cell(1, 3, goal.daily_goal_cups)
+    # Update the daily goal in the sheet (for simplicity, assuming it's in the second row, third column)
+    intake_sheet.update_cell(2, 3, goal.daily_goal_cups)
     return goal
