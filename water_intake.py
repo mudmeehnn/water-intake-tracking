@@ -28,7 +28,7 @@ def get_all_logs(sheet):
 def add_log_to_sheet(sheet, log):
     rows = sheet.get_all_records()
     for i, row in enumerate(rows, start=2):  # starting from row 2 to skip headers
-        if row['Date'] == log.date.strftime("%Y-%m-%d"):
+        if row['date'] == log.date.strftime("%Y-%m-%d"):
             # Update the amount_cups
             sheet.update_cell(i, 2, log.amount_cups)
             return
@@ -38,7 +38,7 @@ def add_log_to_sheet(sheet, log):
 def update_goal_in_sheet(sheet, goal):
     rows = sheet.get_all_records()
     for i, row in enumerate(rows, start=2):  # starting from row 2 to skip headers
-        if row['Date'] == goal.date.strftime("%Y-%m-%d"):
+        if row['date'] == goal.date.strftime("%Y-%m-%d"):
             # Update the daily_goal_cups
             sheet.update_cell(i, 3, goal.daily_goal_cups)
             return
