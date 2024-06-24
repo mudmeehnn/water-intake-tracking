@@ -4,16 +4,10 @@ from fastapi import APIRouter, HTTPException
 from werkzeug.security import generate_password_hash, check_password_hash
 from pydantic import BaseModel
 
-import os
-import json
-
-credentials_json = os.getenv('GOOGLE_CREDENTIAL')
-print(credentials_json)
-
-USER_SPREADSHEET_NAME = 'UserDatabase'
+from config import GOOGLE_SHEETS_CREDENTIALS, USER_SPREADSHEET_NAME
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_json, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(GOOGLE_SHEETS_CREDENTIALS, scope)
 client = gspread.authorize(creds)
 user_sheet = client.open(USER_SPREADSHEET_NAME).sheet1
 
