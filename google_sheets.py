@@ -12,7 +12,7 @@ sheet = client.open(TASK_SPREADSHEET_NAME).sheet1
 def sync_intake_logs_to_sheets():
     sheet.clear()
     sheet.append_row(['Date', 'Amount', 'Daily Goal'])
-    previous_goal = 8  # Default to 8 cups if there is no previous goal
+    previous_goal = None
     
     for log in IntakeLog:
         if log['daily_goal']:
