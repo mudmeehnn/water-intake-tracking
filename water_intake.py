@@ -84,8 +84,8 @@ def get_monthly_logs(date: datetime):
 def get_progress(date: datetime):
     daily_logs = get_logs_by_date_range(intake_sheet, date, date)
     total_intake = sum(float(log['amount_cups']) for log in daily_logs)
-    # Retrieve the daily goal from the sheet (for simplicity, assuming it's in the first row, third column)
-    daily_goal = float(intake_sheet.cell(1, 3).value)
+    # Retrieve the daily goal from the sheet (for simplicity, assuming it's in the second row, third column)
+    daily_goal = float(intake_sheet.cell(2, 3).value)
 
     progress = (total_intake / daily_goal) * 100 if daily_goal else 0
 
