@@ -5,13 +5,10 @@ from pydantic import BaseModel
 from typing import List
 import os
 import json
-
-credentials_json = os.getenv('GOOGLE_CREDENTIAL')
-
-TASK_SPREADSHEET_NAME = 'TasksDatabase'
+from config import GOOGLE_SHEETS_CREDENTIALS, TASK_SPREADSHEET_NAME
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials_json, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(GOOGLE_SHEETS_CREDENTIALS, scope)
 client = gspread.authorize(creds)
 task_sheet = client.open(TASK_SPREADSHEET_NAME).sheet1
 
