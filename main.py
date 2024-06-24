@@ -1,16 +1,16 @@
 from fastapi import FastAPI
 from users import users_router
-from tasks import tasks_router
 from google_sheets import sync_tasks_to_sheets
+from water_intake import water_intake_router  # Ensure this matches the file name where your router is defined
 
 app = FastAPI()
 
 app.include_router(users_router, prefix="/users")
-app.include_router(tasks_router, prefix="/tasks")
+app.include_router(water_intake_router, prefix="/water_intake")
 
 @app.get("/")
 def home():
-    return {"message": "Welcome to the Basic Student Task Tracker API!"}
+    return {"message": "Welcome to the Water Intake Tracker API!"}
 
 @app.get("/sync")
 def sync():
