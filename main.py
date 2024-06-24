@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from users import users_router
-from google_sheets import sync_tasks_to_sheets
+from google_sheets import sync_intake_logs_to_sheets
 from water_intake import water_intake_router  # Ensure this matches the file name where your router is defined
 
 app = FastAPI()
@@ -14,7 +14,7 @@ def home():
 
 @app.get("/sync")
 def sync():
-    sync_tasks_to_sheets()
+    sync_intake_logs_to_sheets()
     return {"message": "Tasks synced to Google Sheets"}
 
 if __name__ == '__main__':
