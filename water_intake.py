@@ -47,7 +47,7 @@ def update_goal_in_sheet(sheet, goal):
 
 def get_logs_by_date_range(sheet, start_date, end_date):
     logs = get_all_logs(sheet)
-    filtered_logs = [log for log in logs if start_date <= datetime.strptime(log['Date'], "%Y-%m-%d") <= end_date]
+    filtered_logs = [log for log in logs if start_date <= datetime.strptime(log['date'], "%Y-%m-%d") <= end_date]
     return filtered_logs
 
 @water_intake_router.post("/log", response_model=IntakeLog)
