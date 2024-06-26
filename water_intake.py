@@ -14,18 +14,22 @@ intake_sheet = client.open(TASK_SPREADSHEET_NAME).sheet1
 
 water_intake_router = APIRouter()
 
-class IntakeLog(BaseModel):
+class OldIntakeLog(BaseModel):
     date: datetime
     amount_cups: float
+
+class NewIntakeLog(BaseModel):
+    date: datetime
 
 class Goal(BaseModel):
     date: datetime
     daily_goal_cups: float
 
+# Helper functions
 def get_all_logs(sheet):
     return sheet.get_all_records()
 
-def add_log_to_sheet(sheet, log):
+def add_log_to_sheet_with_amount(sheet, log):
     rows = sheet.get_all_records()
     for i, row in enumerate(rows, start=2):  # starting from row 2 to skip headers
         if row['date'] == log.date.strftime("%Y-%m-%d"):
@@ -36,6 +40,18 @@ def add_log_to_sheet(sheet, log):
             return
     # If no matching date found, append new row with the given amount
     sheet.append_row([log.date.strftime("%Y-%m-%d"), log.amount_cups, ''])
+
+def add_log_to_sheet_increment(sheet, log):
+    rows = sheet.get_all_records()
+    for i, row in enumerate(rows, start=2):  # starting from row 2 to skip headers
+        if row['date'] == log.date.strftime("%Y-%m-%d"):
+            # Increment the existing amount_cups by 1
+            existing_amount = float(row['amount_cups'])
+            new_amount = existing_amount + 1
+            sheet.update_cell(i, 2, new_amount)
+            return
+    # If no matching date found, append new row with amount_cups as 1
+    sheet.append_row([log.date.strftime("%Y-%m-%d"), 1, ''])
 
 def update_goal_in_sheet(sheet, goal):
     rows = sheet.get_all_records()
@@ -52,29 +68,35 @@ def get_logs_by_date_range(sheet, start_date, end_date):
     filtered_logs = [log for log in logs if start_date <= datetime.strptime(log['date'], "%Y-%m-%d") <= end_date]
     return filtered_logs
 
-@water_intake_router.post("/log", response_model=IntakeLog)
-def log_intake(log: IntakeLog):
-    add_log_to_sheet(intake_sheet, log)
+# Endpoints
+@water_intake_router.post("/log_with_amount", response_model=OldIntakeLog)
+def log_intake_with_amount(log: OldIntakeLog):
+    add_log_to_sheet_with_amount(intake_sheet, log)
     return log
 
-@water_intake_router.get("/logs", response_model=List[IntakeLog])
+@water_intake_router.post("/log", response_model=NewIntakeLog)
+def log_intake(log: NewIntakeLog):
+    add_log_to_sheet_increment(intake_sheet, log)
+    return log
+
+@water_intake_router.get("/logs", response_model=List[OldIntakeLog])
 def get_logs():
     logs = get_all_logs(intake_sheet)
     return logs
 
-@water_intake_router.get("/logs/daily", response_model=List[IntakeLog])
+@water_intake_router.get("/logs/daily", response_model=List[OldIntakeLog])
 def get_daily_logs(date: datetime):
     logs = get_logs_by_date_range(intake_sheet, date, date)
     return logs
 
-@water_intake_router.get("/logs/weekly", response_model=List[IntakeLog])
+@water_intake_router.get("/logs/weekly", response_model=List[OldIntakeLog])
 def get_weekly_logs(date: datetime):
     start_date = date - timedelta(days=date.weekday())  # Monday of the current week
     end_date = start_date + timedelta(days=6)  # Sunday of the current week
     logs = get_logs_by_date_range(intake_sheet, start_date, end_date)
     return logs
 
-@water_intake_router.get("/logs/monthly", response_model=List[IntakeLog])
+@water_intake_router.get("/logs/monthly", response_model=List[OldIntakeLog])
 def get_monthly_logs(date: datetime):
     start_date = date.replace(day=1)  # First day of the current month
     next_month = start_date.replace(month=start_date.month % 12 + 1, day=1)
