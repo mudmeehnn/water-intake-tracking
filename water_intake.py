@@ -29,10 +29,12 @@ def add_log_to_sheet(sheet, log):
     rows = sheet.get_all_records()
     for i, row in enumerate(rows, start=2):  # starting from row 2 to skip headers
         if row['date'] == log.date.strftime("%Y-%m-%d"):
-            # Update the amount_cups
-            sheet.update_cell(i, 2, log.amount_cups)
+            # Update the amount_cups by incrementing the existing value
+            existing_amount = float(row['amount_cups'])
+            new_amount = existing_amount + log.amount_cups
+            sheet.update_cell(i, 2, new_amount)
             return
-    # If no matching date found, append new row
+    # If no matching date found, append new row with the given amount
     sheet.append_row([log.date.strftime("%Y-%m-%d"), log.amount_cups, ''])
 
 def update_goal_in_sheet(sheet, goal):
