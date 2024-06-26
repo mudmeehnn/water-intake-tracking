@@ -17,6 +17,7 @@ water_intake_router = APIRouter()
 class OldIntakeLog(BaseModel):
     date: datetime
     amount_cups: float
+    daily_goal: float
 
 class NewIntakeLog(BaseModel):
     date: datetime
