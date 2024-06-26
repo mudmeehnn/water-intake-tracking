@@ -94,7 +94,10 @@ def get_weekly_logs(date: datetime):
     start_date = date - timedelta(days=date.weekday())  # Monday of the current week
     end_date = start_date + timedelta(days=6)  # Sunday of the current week
     logs = get_logs_by_date_range(intake_sheet, start_date, end_date)
-    return logs
+    return [OldIntakeLog(date=datetime.strptime(log['date'], "%Y-%m-%d"),
+                      amount_cups=float(log['amount_cups']),
+                      daily_goal=float(log['daily_goal']))
+            for log in logs]
 
 @water_intake_router.get("/logs/monthly", response_model=List[OldIntakeLog])
 def get_monthly_logs(date: datetime):
@@ -102,7 +105,10 @@ def get_monthly_logs(date: datetime):
     next_month = start_date.replace(month=start_date.month % 12 + 1, day=1)
     end_date = next_month - timedelta(days=1)  # Last day of the current month
     logs = get_logs_by_date_range(intake_sheet, start_date, end_date)
-    return logs
+    return [OldIntakeLog(date=datetime.strptime(log['date'], "%Y-%m-%d"),
+                      amount_cups=float(log['amount_cups']),
+                      daily_goal=float(log['daily_goal']))
+            for log in logs]
 
 @water_intake_router.get("/progress")
 def get_progress(date: datetime):
